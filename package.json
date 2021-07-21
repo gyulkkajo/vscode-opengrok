@@ -16,7 +16,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:opengrok.openat"
+		"onCommand:opengrok.openat",
+		"onCommand:opengrok.fullsearch"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -39,6 +40,10 @@
 			{
 				"command": "opengrok.openat",
 				"title": "OpenGrok: Search current position"
+			},
+			{
+				"command": "opengrok.fullsearch",
+				"title": "OpenGrok: Full Search"
 			}
 		]
 	},

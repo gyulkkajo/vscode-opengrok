@@ -62,7 +62,40 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	let fullsearch = vscode.commands.registerCommand('opengrok.fullsearch', async () => {
+		const editor = vscode.window.activeTextEditor;
+		const conf = vscode.workspace.getConfiguration('');
+		var host: string | undefined = conf.get(OPENGROK_CONF_HOST);
+		var proj = conf.get(OPENGROK_CONF_PROJECT);
+		var search_txt: string|undefined;
+
+		if (!(host && proj)) {
+			vscode.window.showErrorMessage('Need to set OpenGrok server and project');
+			return;
+		}
+
+		search_txt = await vscode.window.showInputBox({
+			placeHolder: 'Text to search',
+			validateInput: text => {
+				if (text == "") {
+					return 'Cannot be empty';
+				}
+				return null;
+			}
+		});
+
+		if (host && proj && search_txt) {
+			var targetUrl = new URL(host);
+			targetUrl.pathname = `source/search`;
+			targetUrl.search = `project=${proj}&full=${search_txt}`
+
+			console.log(`URL: ${targetUrl.href}`);
+			vscode.env.openExternal(vscode.Uri.parse(targetUrl.href));
+		}
+	});
+
 	context.subscriptions.push(disposable);
+	context.subscriptions.push(fullsearch);
 }
 
 // this method is called when your extension is deactivated
